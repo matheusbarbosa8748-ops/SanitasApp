@@ -1,9 +1,10 @@
-// lib/src/screens/main_wrapper_screen.dart
 import 'package:flutter/material.dart';
+import '../controllers/health_controller.dart';
 import 'home/home_screen.dart';
 import 'exams/exams_screen.dart';
 import 'profile/profile_screen.dart';
 
+/// Tela Wrapper principal que gerencia as abas inferiores e o estado global da aplicação Sanitas.
 class MainWrapperScreen extends StatefulWidget {
   const MainWrapperScreen({super.key});
 
@@ -13,47 +14,69 @@ class MainWrapperScreen extends StatefulWidget {
 
 class _MainWrapperScreenState extends State<MainWrapperScreen> {
   int _currentIndex = 0;
+  late final HealthController _healthController;
 
-  // Lista das telas principais da navegação inferior
-  final List<Widget> _screens = [
-    const HomeScreen(),
-    const ExamsScreen(),
-    const ProfileScreen(),
-  ];
+  @override
+  void initState() {
+    super.initState();
+    _healthController = HealthController();
+  }
+
+  @override
+  void dispose() {
+    _healthController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: _screens[_currentIndex],
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: _currentIndex,
-        onTap: (index) {
-          setState(() {
-            _currentIndex = index;
-          });
-        },
-        selectedItemColor: Colors.teal[800],
-        unselectedItemColor: Colors.grey.shade600,
-        selectedLabelStyle: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
-        unselectedLabelStyle: const TextStyle(fontSize: 14),
-        items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home_outlined, size: 28),
-            activeIcon: Icon(Icons.home, size: 28),
-            label: 'Início',
+    return ListenableBuilder(
+      listenable: _healthController,
+      builder: (context, child) {
+        final List<Widget> screens = [
+          HomeScreen(controller: _healthController),
+          ExamsScreen(controller: _healthController),
+          ProfileScreen(controller: _healthController),
+        ];
+
+        return Scaffold(
+          body: IndexedStack(
+            index: _currentIndex,
+            children: screens,
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.folder_open_outlined, size: 28),
-            activeIcon: Icon(Icons.folder, size: 28),
-            label: 'Exames',
+          bottomNavigationBar: BottomNavigationBar(
+            currentIndex: _currentIndex,
+            onTap: (index) {
+              setState(() {
+                _currentIndex = index;
+              });
+            },
+            selectedItemColor: Colors.teal[800],
+            unselectedItemColor: Colors.grey.shade600,
+            selectedLabelStyle: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+            unselectedLabelStyle: const TextStyle(fontSize: 14),
+            elevation: 8,
+            iconSize: 30, // Ícones ampliados para acessibilidade 50+
+            items: const [
+              BottomNavigationBarItem(
+                icon: Icon(Icons.home_outlined),
+                activeIcon: Icon(Icons.home),
+                label: 'Início',
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.folder_open_outlined),
+                activeIcon: Icon(Icons.folder_shared),
+                label: 'Exames',
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.person_outline),
+                activeIcon: Icon(Icons.account_circle),
+                label: 'Perfil',
+              ),
+            ],
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person_outline, size: 28),
-            activeIcon: Icon(Icons.person, size: 28),
-            label: 'Perfil',
-          ),
-        ],
-      ),
+        );
+      },
     );
   }
 }
