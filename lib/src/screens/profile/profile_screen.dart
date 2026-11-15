@@ -17,7 +17,7 @@ class ProfileScreen extends StatelessWidget {
     final family = controller.familyMembers;
 
     return Scaffold(
-      appBar: const CustomAppBar(title: 'Perfil e Saúde'),
+      appBar: CustomAppBar(title: 'Perfil e Saúde', controller: controller),
       body: ListView(
         padding: const EdgeInsets.all(16.0),
         children: [

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../models/exam_model.dart';
 import '../models/user_model.dart';
 import '../models/family_member_model.dart';
+import '../models/notification_model.dart';
 
 /// Controller para gerenciar o estado da aplicação Sanitas
 class HealthController extends ChangeNotifier {
@@ -100,6 +101,53 @@ class HealthController extends ChangeNotifier {
 
   List<FamilyMemberModel> get familyMembers => List.unmodifiable(_familyMembers);
 
+  // Lista de notificações do aplicativo
+  final List<NotificationModel> _notifications = [
+    NotificationModel(
+      id: 'n1',
+      title: 'Novo Exame Adicionado',
+      message: 'O resultado do seu Hemograma Completo já está disponível no prontuário.',
+      date: DateTime.now().subtract(const Duration(hours: 2)),
+      isRead: false,
+      type: 'exam',
+    ),
+    NotificationModel(
+      id: 'n2',
+      title: 'Consulta Agendada',
+      message: 'Consulta com Dra. Ana Martins (Cardiologia) agendada para amanhã às 10:00.',
+      date: DateTime.now().subtract(const Duration(days: 1)),
+      isRead: false,
+      type: 'appointment',
+    ),
+    NotificationModel(
+      id: 'n3',
+      title: 'Lembrete de Atualização',
+      message: 'Lembrete: Mantenha seus contatos de emergência e alergias sempre atualizados.',
+      date: DateTime.now().subtract(const Duration(days: 4)),
+      isRead: true,
+      type: 'reminder',
+    ),
+  ];
+
+  List<NotificationModel> get notifications => List.unmodifiable(_notifications);
+
+  int get unreadNotificationsCount => _notifications.where((n) => !n.isRead).length;
+
+  void markNotificationAsRead(String id) {
+    final index = _notifications.indexWhere((n) => n.id == id);
+    if (index != -1) {
+      _notifications[index] = _notifications[index].copyWith(isRead: true);
+      notifyListeners();
+    }
+  }
+
+  void markAllNotificationsAsRead() {
+    for (int i = 0; i < _notifications.length; i++) {
+      _notifications[i] = _notifications[i].copyWith(isRead: true);
+    }
+    notifyListeners();
+  }
+
   // Filtro de categoria selecionado
   String _selectedCategory = 'Todos';
   String get selectedCategory => _selectedCategory;
@@ -109,9 +157,20 @@ class HealthController extends ChangeNotifier {
     notifyListeners();
   }
 
-  /// Adiciona um novo exame ao prontuário
+  /// Adiciona um novo exame ao prontuário e dispara uma notificação
   void addExam(ExamModel exam) {
     _exams.insert(0, exam);
+    _notifications.insert(
+      0,
+      NotificationModel(
+        id: DateTime.now().millisecondsSinceEpoch.toString(),
+        title: 'Novo Exame Adicionado',
+        message: 'O exame "${exam.title}" foi registrado com sucesso.',
+        date: DateTime.now(),
+        isRead: false,
+        type: 'exam',
+      ),
+    );
     notifyListeners();
   }
 }

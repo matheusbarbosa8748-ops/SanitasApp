@@ -61,7 +61,7 @@ class HomeScreen extends StatelessWidget {
     final recentExams = controller.exams;
 
     return Scaffold(
-      appBar: const CustomAppBar(title: 'Visão Geral'),
+      appBar: CustomAppBar(title: 'Visão Geral', controller: controller),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
         child: Column(

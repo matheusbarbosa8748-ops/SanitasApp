@@ -1,19 +1,25 @@
 // lib/src/widgets/custom_app_bar.dart
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import '../controllers/health_controller.dart';
+import '../screens/notifications/notifications_screen.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String title;
   final List<Widget>? actions;
+  final HealthController? controller;
 
   const CustomAppBar({
     super.key,
     required this.title,
     this.actions,
+    this.controller,
   });
 
   @override
   Widget build(BuildContext context) {
+    final unreadCount = controller?.unreadNotificationsCount ?? 0;
+
     return AppBar(
       backgroundColor: Colors.teal.shade700,
       foregroundColor: Colors.white,
@@ -68,10 +74,61 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
         ],
       ),
       actions: actions ?? [
-        IconButton(
-          icon: const Icon(Icons.notifications_outlined),
-          tooltip: 'Notificações',
-          onPressed: () {},
+        Stack(
+          alignment: Alignment.center,
+          children: [
+            IconButton(
+              icon: Icon(
+                unreadCount > 0 ? Icons.notifications_active : Icons.notifications_outlined,
+                size: 26,
+              ),
+              tooltip: 'Notificações',
+              onPressed: () {
+                if (controller != null) {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => NotificationsScreen(controller: controller!),
+                    ),
+                  );
+                } else {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text(
+                        'Nenhuma notificação recente.',
+                        style: GoogleFonts.poppins(fontSize: 15),
+                      ),
+                      duration: const Duration(seconds: 2),
+                    ),
+                  );
+                }
+              },
+            ),
+            if (unreadCount > 0)
+              Positioned(
+                top: 8,
+                right: 8,
+                child: Container(
+                  padding: const EdgeInsets.all(4),
+                  decoration: const BoxDecoration(
+                    color: Colors.redAccent,
+                    shape: BoxShape.circle,
+                  ),
+                  constraints: const BoxConstraints(
+                    minWidth: 18,
+                    minHeight: 18,
+                  ),
+                  child: Text(
+                    '$unreadCount',
+                    style: GoogleFonts.poppins(
+                      color: Colors.white,
+                      fontSize: 10,
+                      fontWeight: FontWeight.bold,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+              ),
+          ],
         ),
       ],
     );

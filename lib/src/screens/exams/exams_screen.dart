@@ -60,7 +60,7 @@ class ExamsScreen extends StatelessWidget {
     final categories = ['Todos', 'Sangue', 'Cardiologia', 'Imagem'];
 
     return Scaffold(
-      appBar: const CustomAppBar(title: 'Meus Exames'),
+      appBar: CustomAppBar(title: 'Meus Exames', controller: controller),
       body: Column(
         children: [
           // Filtros de Categoria (Toque amplo >= 48px)
