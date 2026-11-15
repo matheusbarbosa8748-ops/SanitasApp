@@ -287,6 +287,31 @@ class ProfileScreen extends StatelessWidget {
               ),
             ),
           ),
+          const SizedBox(height: 24),
+
+          // Botão de Sair da Conta (Logout)
+          OutlinedButton.icon(
+            onPressed: () {
+              controller.logout();
+            },
+            icon: const Icon(Icons.logout_rounded, color: Colors.red, size: 24),
+            label: Text(
+              'Sair da Conta',
+              style: GoogleFonts.poppins(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+                color: Colors.red.shade700,
+              ),
+            ),
+            style: OutlinedButton.styleFrom(
+              minimumSize: const Size.fromHeight(52),
+              side: BorderSide(color: Colors.red.shade300, width: 2),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(16),
+              ),
+            ),
+          ),
+          const SizedBox(height: 16),
         ],
       ),
     );

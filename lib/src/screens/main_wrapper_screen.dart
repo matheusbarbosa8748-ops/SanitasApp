@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../controllers/health_controller.dart';
+import 'auth/login_screen.dart';
 import 'home/home_screen.dart';
 import 'exams/exams_screen.dart';
 import 'profile/profile_screen.dart';
@@ -33,6 +34,11 @@ class _MainWrapperScreenState extends State<MainWrapperScreen> {
     return ListenableBuilder(
       listenable: _healthController,
       builder: (context, child) {
+        // Exibe tela de autenticação caso o usuário esteja deslogado
+        if (!_healthController.isAuthenticated) {
+          return LoginScreen(controller: _healthController);
+        }
+
         final List<Widget> screens = [
           HomeScreen(controller: _healthController),
           ExamsScreen(controller: _healthController),

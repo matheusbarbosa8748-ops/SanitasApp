@@ -5,6 +5,26 @@ import '../models/family_member_model.dart';
 
 /// Controller para gerenciar o estado da aplicação Sanitas
 class HealthController extends ChangeNotifier {
+  // Estado de autenticação do usuário
+  bool _isAuthenticated = true;
+  bool get isAuthenticated => _isAuthenticated;
+
+  void login(String email, String password) {
+    _isAuthenticated = true;
+    notifyListeners();
+  }
+
+  void logout() {
+    _isAuthenticated = false;
+    notifyListeners();
+  }
+
+  void register(UserModel newUser) {
+    _user = newUser;
+    _isAuthenticated = true;
+    notifyListeners();
+  }
+
   // Modelo de usuário paciente padrão (exemplo 50+)
   UserModel _user = const UserModel(
     id: 'u1',

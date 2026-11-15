@@ -3,6 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import '../../controllers/health_controller.dart';
 import '../../widgets/custom_app_bar.dart';
 import '../../widgets/consultation_mode_sheet.dart';
+import '../../widgets/add_exam_sheet.dart';
 import '../../models/exam_model.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -248,6 +249,30 @@ class HomeScreen extends StatelessWidget {
                   );
                 },
               ),
+            const SizedBox(height: 18),
+
+            // NOVIDADE: Botão de atalho "Adicionar Novo Exame" no mesmo estilo da ação de exames
+            ElevatedButton.icon(
+              onPressed: () => AddExamSheet.show(context, controller),
+              icon: const Icon(Icons.add_a_photo, size: 26),
+              label: Text(
+                'Adicionar Novo Exame',
+                style: GoogleFonts.poppins(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.teal.shade700,
+                foregroundColor: Colors.white,
+                padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 20),
+                minimumSize: const Size.fromHeight(54),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16),
+                ),
+                elevation: 3,
+              ),
+            ),
           ],
         ),
       ),
